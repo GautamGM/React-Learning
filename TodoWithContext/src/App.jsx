@@ -28,17 +28,13 @@ function App() {
 
   useEffect(()=>{
    const todo= JSON.parse(localStorage.getItem("todos"))||[]
-   console.log(todo)
    setTodos(todo)
   },[])
 
   useEffect(()=>{
-    console.log(todos)
     if(todos.length>0){
-      console.log("helloo haiga aaaa")
       localStorage.setItem("todos",JSON.stringify(todos))
     }
-    console.log("nhi haigas")
   },[todos])
 // =-------------------------------------------------------------------End of Todo Functionality--------------->
 const [themeMode, setThemeMode] = useState("light");
