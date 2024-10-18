@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { TodoForm, TodoItem } from "./Components";
+import { TodoProvider } from "./TodoContext";
+import { useEffect, useState } from "react";
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
+  const addTodo = (todo) => {
+    setTodos((prevTodo) => [{ id: Date.now(), ...todo }, ...prevTodo]);
+  };
+  const updateTodo = (id, todo) => {
+    setTodos((prevTodo) =>
+      prevTodo.map((prevTodo) => (prevTodo.id === id ? todo : prevTodo))
+    );
+  };
+  const deleteTodo = (id) => {
+    setTodos((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+  };
+  const toggleComplete = (id) => {
+    setTodos((prevTodo) =>
+      prevTodo.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+    console.log(todos);
+  };
+
+  // useEffect(() => {
+  //   const todo = JSON.parse(localStorage.getItem("todoData"));
+  //   console.log(todo)
+  //   setTodos(todo);
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log(todos)
+  //   localStorage.setItem("todoData", JSON.stringify("todoData",todos)) ;
+  // }, [todos]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <TodoProvider
+      value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete }}
+    >
+      <div className="bg-[#172842] min-h-screen py-8">
+        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
+          <h1 className="text-2xl font-bold text-center mb-8 mt-2">
+            Manage Your Todos
+          </h1>
+          <div className="mb-4">
+            <TodoForm />
+          </div>
+          <div className="flex flex-wrap gap-y-3">
+            {/*Loop and Add TodoItem here */}
+            {todos.map((todo) => (
+              <div className="w-full" key={todo.id}>
+                <TodoItem todo={todo} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </TodoProvider>
+  );
 }
 
-export default App
+export default App;
