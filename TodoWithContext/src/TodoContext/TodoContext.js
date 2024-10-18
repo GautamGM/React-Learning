@@ -12,6 +12,10 @@ const TodoContext = createContext({
   deleteTodo: (id) => {},
   updateTodo: (id, todo) => {},
   toggleComplete: (id) => {},
+  // theme context
+  themeMode:"light",
+    lightMode:()=>{},
+    darkMode:()=>{}
 });
 
 export const TodoProvider = TodoContext.Provider;

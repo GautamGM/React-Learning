@@ -1,8 +1,11 @@
 import { TodoForm, TodoItem } from "./Components";
+import ThemeBtn from "./Components/ThemeBtn/ThemeBtn";
 import { TodoProvider } from "./TodoContext";
 import { useEffect, useState } from "react";
 function App() {
+  // To do Functionlity===<>
   const [todos, setTodos] = useState([]);
+  const[count,setcont]=useState(0)
   const addTodo = (todo) => {
     setTodos((prevTodo) => [{ id: Date.now(), ...todo }, ...prevTodo]);
   };
@@ -20,29 +23,55 @@ function App() {
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
-    console.log(todos);
+    
   };
 
-  // useEffect(() => {
-  //   const todo = JSON.parse(localStorage.getItem("todoData"));
-  //   console.log(todo)
-  //   setTodos(todo);
-  // }, []);
+  useEffect(()=>{
+   const todo= JSON.parse(localStorage.getItem("todos"))||[]
+   console.log(todo)
+   setTodos(todo)
+  },[])
 
-  // useEffect(() => {
-  //   console.log(todos)
-  //   localStorage.setItem("todoData", JSON.stringify("todoData",todos)) ;
-  // }, [todos]);
+  useEffect(()=>{
+    console.log(todos)
+    if(todos.length>0){
+      console.log("helloo haiga aaaa")
+      localStorage.setItem("todos",JSON.stringify(todos))
+    }
+    console.log("nhi haigas")
+  },[todos])
+// =-------------------------------------------------------------------End of Todo Functionality--------------->
+const [themeMode, setThemeMode] = useState("light");
+
+  const lightMode = () => {
+    setThemeMode("light");
+  };
+
+  const darkMode = () => {
+    setThemeMode("dark");
+  };
+
+  // giving the depence when it chnage intire code will we rerender
+  // Actual change in theme
+
+  useEffect(() => {
+    const Mode = document.querySelector("html");
+    Mode.classList.remove("light", "dark");
+    Mode.classList.add(themeMode);
+  }, [themeMode]);
+
+
 
   return (
     <TodoProvider
-      value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete }}
+      value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete ,themeMode,darkMode,lightMode}}
     >
       <div className="bg-[#172842] min-h-screen py-8">
         <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
           <h1 className="text-2xl font-bold text-center mb-8 mt-2">
-            Manage Your Todos
+            Manage Your Todos 
           </h1>
+          <div><ThemeBtn/></div>
           <div className="mb-4">
             <TodoForm />
           </div>
