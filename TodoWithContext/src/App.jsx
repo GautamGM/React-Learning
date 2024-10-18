@@ -66,8 +66,8 @@ const [themeMode, setThemeMode] = useState("light");
     <TodoProvider
       value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete ,themeMode,darkMode,lightMode}}
     >
-      <div className="bg-[#172842] min-h-screen py-8">
-        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
+      <div className="dark:bg-[#222325] min-h-screen py-8 bg-slate-200">
+        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 dark:text-white">
           <h1 className="text-2xl font-bold text-center mb-8 mt-2">
             Manage Your Todos 
           </h1>
