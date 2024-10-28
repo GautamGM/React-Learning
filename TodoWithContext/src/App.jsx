@@ -56,7 +56,15 @@ const [themeMode, setThemeMode] = useState("light");
     Mode.classList.add(themeMode);
   }, [themeMode]);
 
+  useEffect(()=>{
+    const theme=localStorage.getItem("themeMode")
+    setThemeMode(theme)
+    console.log(theme)
+  },[])
 
+  useEffect(()=>{
+    localStorage.setItem("themeMode",themeMode)
+  },[themeMode])
 
   return (
     <TodoProvider
