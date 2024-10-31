@@ -1,10 +1,12 @@
 
+import ReactFormWithHook from './ReactFormWithHook/reactFormWithHook'
 import UserDetailWithoutReactHook from './simpleForm/userDetail'
 
 function App() {
   return (
-    <div className='bg-black ' >
-      <UserDetailWithoutReactHook/>
+    <div >
+      {/* <UserDetailWithoutReactHook/> */}
+      <ReactFormWithHook/>
     </div>
   )
 }

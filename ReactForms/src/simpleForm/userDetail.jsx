@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { SimpleSchema } from "./simpleSchema";
+// import { SimpleSchema } from "./simpleSchema";
 // import { Controller, useForm } from "react-hook-form";
-
+import * as yup from "yup";
 const UserDetailWithoutReactHook = () => {
-
-
   const userDetail = {
     fname: "",
     lname: "",
@@ -15,28 +13,54 @@ const UserDetailWithoutReactHook = () => {
     phone_Number: "",
   };
 
-  const [user, setUser] = useState(userDetail);
-  const [errors,setError]=useState("")
+  const [user, setUser] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    address: "",
+    phone_Number: "",
+  });
 
-//   const {
-//     control,
-//     handleSubmit,
-//     formState: { errors },
-// } = useForm({
-//     resolver: yupResolver(SimpleSchema),
-//     mode: "onChange",
-//     defaultValues: userDetail,
-// });
+  const [errors, setError] = useState({});
+
+  const SimpleSchema = yup.object().shape({
+    fname: yup.string().required("First name is required"),
+    lname: yup.string().required("Last name is required"),
+    email: yup.string().email("Invalid Email").required("Email is required"),
+    password: yup.string(),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "password is not matched")
+      .required(),
+    phone_Number: yup.string(),
+    address: yup.string(),
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(SimpleSchema)
+    try {
+      await SimpleSchema.validate(user, { abortEarly: false });
+      console.log("data is sucessfull", user);
+    } catch (error) {
+      console.log(error.inner)
+      let newError = {};
+      error.inner.forEach((err) => {
+      return  newError[err.path] = err.message;
+      });
+
+      setError(newError);
+    }
+    
+    setUser(userDetail)
   };
+  
 
   return (
     <div>
@@ -58,6 +82,7 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.fname ? <p>therer is error {errors.fname} </p> : ""}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -72,6 +97,7 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.lname ? <p>therer is error {errors.lname} </p> : ""}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -87,6 +113,7 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.email ? <p>therer is error {errors.email} </p> : ""}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -101,6 +128,7 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.password ? <p>therer is error {errors.password} </p> : ""}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -115,6 +143,11 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.confirmPassword ? (
+                <p>therer is error of {errors.confirmPassword}</p>
+              ) : (
+                ""
+              )}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -129,6 +162,7 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.address ? <p>therer is {errors.address}</p> : ""}
             </div>
             {/* end */}
             <div className="input-group m-5 flex flex-col text-[18px] ">
@@ -143,6 +177,11 @@ const UserDetailWithoutReactHook = () => {
                 className="border border-white shadow-sm shadow-white h-[40px] rounded p-1 text-black "
                 placeholder="Enter your Name"
               />
+              {errors.phone_Number ? (
+                <p>therer is phone {errors.phone_Number}</p>
+              ) : (
+                ""
+              )}
             </div>
             {/* end */}
           </div>
