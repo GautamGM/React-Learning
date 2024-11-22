@@ -1,7 +1,8 @@
 import axios from "axios"
 
+//  insatnce .
 const url= import.meta.env.VITE_BASE_URL_POSTS
-console.log(url,"url")
+
 
 const api=axios.create({
     baseURL:url
@@ -15,4 +16,16 @@ export const getpost=(endpoint)=>{
 
 export const deletePost=(id)=>{
     return api.delete(`/posts/${id}`)
+}
+
+// add the post in json
+export const postData=(post)=>{
+return api.post("/posts",post)
+}
+
+// update the post 
+
+export const upDatePost=(id,post)=>{
+    console.log(id,post,"<------------POST INSTANCE")
+    return api.put(`/posts/${id}`,post)
 }

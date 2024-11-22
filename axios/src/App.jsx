@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { getpost,deletePost } from "./Api/postapi";
+import { getpost, deletePost } from "./Api/postapi";
 import { toast } from "react-toastify";
+import FormForPost from "./component/form/Form";
 
 function App() {
-  const [data, setData] = useState([]);
 
+
+
+  const [data, setData] = useState([]);
+  const [isUpdated,setIsUpDated]=useState({})
   const getPostData = async () => {
     try {
       const res = await getpost("/posts");
@@ -17,23 +21,35 @@ function App() {
 
   useEffect(() => {
     getPostData();
+    
   }, []);
 
-//  delete
-const handleDelete=async(id)=>{
-  const res=await deletePost(id)
-  
-  try{
-    if(res.status===200){
-      const updatedData=data.filter((el)=>el.id!==id)
-      setData(updatedData)
+  //  delete
+  const handleDelete = async (id) => {
+    const res = await deletePost(id);
+    try {
+      if (res.status === 200) {
+        const updatedData = data.filter((el) => el.id !== id);
+        setData(updatedData);
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }catch(err){
-    console.log(err)
-  }
-}
+  };
+// update value
+
+
+const handleUpdatePost=(el)=>setIsUpDated(el)
+
+
+
+
+
   return (
     <>
+      <section>
+        <FormForPost data={data} setData={setData} isUpdated={isUpdated} setIsUpDated={setIsUpDated} />
+      </section>
       <div className="grid grid-cols-5 gap-2 bg-black">
         {data.map((el) => {
           return (
@@ -46,8 +62,8 @@ const handleDelete=async(id)=>{
                 color: "white",
                 height: "150px",
                 display: "flex",
-                flexDirection: "column", 
-                justifyContent: "center",    
+                flexDirection: "column",
+                justifyContent: "center",
                 borderRadius: "15px",
               }}
               className="shadow-lg shadow-white blur-1"
@@ -56,7 +72,9 @@ const handleDelete=async(id)=>{
                 {" "}
                 {el.id}
               </div>
-              {el.title}
+              Title:=={el.title}
+              <br />
+             body--- {el.body.slice(0,10)}
               <div className="flex justify-between items-end ">
                 <button
                   onClick={() => handleDelete(el.id)}
@@ -64,8 +82,8 @@ const handleDelete=async(id)=>{
                 >
                   DELETE
                 </button>
-                <button className="bg-gray-200 p-2 rounded hover:bg-blue-700 hover:text-white ">
-                  Update
+                <button onClick={(()=>handleUpdatePost(el))} className="bg-gray-200 p-2 rounded text-black hover:bg-blue-700 hover:text-white ">
+                  Edit
                 </button>
               </div>
             </div>
